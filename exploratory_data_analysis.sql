@@ -39,5 +39,21 @@ SELECT
 FROM life_expectancy
 GROUP BY Country
 HAVING avg_life_expectancy > 0 AND GDP > 0
-ORDER BY GDP DESC
+ORDER BY GDP DESC -- The highest avg life expectency is the country with the highest GDP
 ;
+
+-- Comparing average life expectancy by country status
+SELECT 
+	Status,
+    COUNT(DISTINCT Country) AS count_country_by_status,
+    ROUND(AVG(`Life expectancy`), 1) AS avg_life_expectancy
+FROM life_expectancy
+GROUP BY Status;
+
+-- adding the adult mortality rate per year
+SELECT Country,
+	Year,
+    `Life expectancy`,
+	`Adult Mortality`,
+    SUM(`Adult Mortality`) OVER(PARTITION BY Country ORDER BY Year) AS rolling_total
+FROM life_expectancy;
